@@ -94,7 +94,7 @@ def createSTTPDF():
         pdf.set_margins(-2, -2, -2)
         x_coor = x * 40.0
         end = total#f'{total:03}'
-        start = total#f'{x+1:03}'
+        start = x+1#f'{x+1:03}'
         filename = stt+"_"+str(start)+"_"+str(end)
         image_buf = io.BytesIO()
         image = random_qr(token, str(start), str(end), filename)
