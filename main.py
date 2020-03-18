@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from flask import Flask, render_template, request, url_for, redirect, Response, send_file, redirect, session
+from flask import Flask, request, url_for, redirect, Response, send_file, 
 import requests
 from fpdf import FPDF, HTMLMixin
 import os
@@ -35,14 +35,14 @@ def random_qr(stt, start, end, filename):
 
     # Add logo here
     img = img.convert("RGBA")
-
-    icon = Image.open('logo.png')
+    icon = Image.open('/static/images/logo.png')
     img_w, img_h = img.size
     factor = 4
     size_w = 40  # int(100)
     size_h = 40  # int(80)
 
     # logo图片的大小不能超过二维码图片的1/4
+    # Jika ingin menambahkan logo uncomment script dibawah ini
     #  icon_w,icon_h=icon.size
     #  if icon_w>size_w:
     #     icon_w=size_w
@@ -60,41 +60,27 @@ def random_qr(stt, start, end, filename):
 
     img.save("./static/images/"+filename+".png")
 
-# @app.route("asdf.jpg")
-# def asdf():
 
-
-@app.route("/shipment/create_stt")
+## 
+# Mencetak sejumlah qrcode dan meletakkan didalam PDF 
+##
+@app.route("/generate_qr_code")
 def createSTTPDF():
 
-    stt_data = request.args.get('stt')
-    # +"##asd33d@@dkfhi3##hhhff##jasdfasdf##asdfasdf##"#request.args.get('stt')
-    token = stt_data
+    qr_code = request.args.get('qr_code')
+    token = qr_code
     stt = token.split("##")[0]
-    total = int(request.args.get('total'))
+    total = int(request.args.get('total')) ## Total qrcode yang akan dicetak dalam satu pdf
 
     pdf = FPDF('P', 'mm', (40, 40))
     x_coor = 0.0
-
-    # end = f'{total:03}'
-    # start = f'{1+1:03}'
-    # filename = stt+"_"+str(start)+"_"+str(end)
-    # image_buf =  io.BytesIO()
-    # image = random_qr(token,str(start),str(end), filename)
-    # image.save(image_buf, "png")
-    # image_buf.seek(0)
-
-    # asdf = Image.open(image_buf.)
-   # asdf = image.save("./static/images/"+filename+".png")
-    # return str(image_buf.read())
-    # return send_file(image.show(), mimetype='image/gif')
 
     for x in range(0, total):
         pdf.add_page()
         pdf.set_margins(-2, -2, -2)
         x_coor = x * 40.0
-        end = total#f'{total:03}'
-        start = x+1#f'{x+1:03}'
+        end = total #f'{total:03}'
+        start = x+1 #f'{x+1:03}'
         filename = stt+"_"+str(start)+"_"+str(end)
         image_buf = io.BytesIO()
         image = random_qr(token, str(start), str(end), filename)
@@ -106,14 +92,14 @@ def createSTTPDF():
     return Response(pdf.output(
         dest='S').encode('latin-1'),
         mimetype='application/pdf',
-        headers={'Content-Disposition': 'attachment;filename='+stt_data+'.pdf'}
+        headers={'Content-Disposition': 'attachment;filename='+qr_code+'.pdf'}
     )
 
 
 
 @app.route('/', methods=['GET'])
-def say_hello():
-    return "Hello, world!"
+def index():
+    return "Connected!"
 
 
 if __name__ == '__main__':

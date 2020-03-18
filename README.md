@@ -1,4 +1,6 @@
-# Hello World for Python on Google Compute Engine
+# Generate Barcode for Python on Google Compute Engine
+
+## Deploy.sh
 
  This folder contains the sample code for the [Deploying to Google Compute Engine][tutorial-gce]
 tutorial. Please refer to the tutorial for instructions on configuring, running,
